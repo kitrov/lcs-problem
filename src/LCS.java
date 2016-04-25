@@ -51,21 +51,23 @@ public class LCS {
         }
     }
 
-    public int execute(){
+    public int execute(int thread_num){
         // change this to thread master-slave system
-        RowSlave slave = new RowSlave(1, this);
-        int max = 0;
-        slave.start();
-        try {
-            slave.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        RowSlave[] slave = new RowSlave[thread_num];
+        for (int i = 0; i < thread_num; i++) {
+            slave[i] = new RowSlave(i + 1, this);
+            slave[i].start();
         }
+        int max = 0;
         /*for (int i = 1; i < len2; i++) {
             for (int j = 1; j < len1; j++) {
                 one_check(i, j);
             }
         }*/
+        for (int i = 0; i < thread_num; i++) { // waits until all threads finish
+            while (slave[i].isAlive()) {
+            }
+        }
         filled = true;
         return max;
     }
@@ -73,7 +75,7 @@ public class LCS {
     public String solution_str() {
         String solution = new String("");
         if (!filled)
-            execute();
+            execute(1);
         // answer search algorithm
         int ri = len1 - 1, // row iterator
                 ci = len2 - 1, //column iterator
