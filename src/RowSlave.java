@@ -12,10 +12,12 @@ public class RowSlave extends Thread {
 
     public void run() {
         super.run();
-        for (int i = 1; i*thread_num < lcs.getRowNum(); i++) {
-            for (int j = 1; j < lcs.getColNum(); j++) {
-                lcs.one_check(i*thread_num, j);
+        int rowLen = lcs.getRowNum(), colLen = lcs.getColNum() , ri = lcs.getRowi();
+        while (lcs.getRowi() < rowLen) {
+            for (int j = 1; j < colLen; j++) {
+                lcs.one_check(ri, j);
             }
+            ri = lcs.incRowi();
         }
     }
 }

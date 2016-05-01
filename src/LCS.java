@@ -4,7 +4,7 @@
 public class LCS {
     Integer[][] table; // storing lcs problem table
     String string1, string2; // two strings for lcs search
-    int len1, len2; // lengths of two strings
+    int len1, len2, rowi; // lengths of two strings, row iter
     int max;
     boolean filled = false; // true when table is filled
 
@@ -14,6 +14,7 @@ public class LCS {
         this.max = 0;
         this.len1 = str1.length() + 1;
         this.len2 = str2.length() + 1;
+        this.rowi = 1;
         this.table = new Integer[len2][len1];
         // first row and column are 0s
         for (int i = 0; i < len1; i++) {
@@ -36,17 +37,34 @@ public class LCS {
         return len1;
     }
 
+    public int getRowi() {
+        return rowi;
+    }
+
+    public int incRowi() {
+        this.rowi++;
+        return this.rowi;
+    }
+
     public void one_check(int i, int j){
-        while (!( table[i - 1][j - 1] != null && table[i][j - 1] != null && table[i - 1][j] != null)) {
-        } // waits if other threads working on needed table cells
-        if (table[i][j] == null) {
-            if (string2.charAt(i - 1) == string1.charAt(j - 1)) {
-                table[i][j] = table[i - 1][j - 1] + 1;
-            } else {
-                table[i][j] = Math.max(table[i][j - 1], table[i - 1][j]);
+        synchronized (this) {
+            while (!(table[i - 1][j - 1] != null && table[i][j - 1] != null && table[i - 1][j] != null)) {
+                try {
+                    this.wait(); // waits if other threads working on needed table cells
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-            if (table[i][j] > max) {
-                max = table[i][j];
+            if (table[i][j] == null) {
+                if (string2.charAt(i - 1) == string1.charAt(j - 1)) {
+                    table[i][j] = table[i - 1][j - 1] + 1;
+                } else {
+                    table[i][j] = Math.max(table[i][j - 1], table[i - 1][j]);
+                }
+                if (table[i][j] > max) {
+                    max = table[i][j];
+                }
+                this.notify();
             }
         }
     }
@@ -58,14 +76,23 @@ public class LCS {
             slave[i] = new RowSlave(i + 1, this);
             slave[i].start();
         }
-        int max = 0;
         /*for (int i = 1; i < len2; i++) {
             for (int j = 1; j < len1; j++) {
                 one_check(i, j);
             }
         }*/
-        for (int i = 0; i < thread_num; i++) { // waits until all threads finish
-            while (slave[i].isAlive()) {
+//        for (int i = 0; i < thread_num; i++) { // waits until all threads finish
+//            while (slave[i].isAlive()) {
+//            }
+//        }
+        synchronized (this) {
+            while (table[len2 - 1][len1 - 1] == null) {
+                try {
+                    this.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                // waits for result cell
             }
         }
         filled = true;
