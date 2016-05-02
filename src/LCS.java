@@ -81,10 +81,6 @@ public class LCS {
                 one_check(i, j);
             }
         }*/
-//        for (int i = 0; i < thread_num; i++) { // waits until all threads finish
-//            while (slave[i].isAlive()) {
-//            }
-//        }
         synchronized (this) {
             while (table[len2 - 1][len1 - 1] == null) {
                 try {

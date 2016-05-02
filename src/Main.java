@@ -15,7 +15,7 @@ public class Main {
         System.out.println("(8)time: " + test.run(8));
         System.out.println("(16)time: " + test.run(16));
         System.out.println("(32)time: " + test.run(32));
-
+        System.out.println("(64)time: " + test.run(64));
 //        System.out.println(test1.execute(1) + ": " + test1.solution_str());
 //        System.out.println(test1.table_toString());
     }
@@ -34,7 +34,7 @@ class Test {
         LCS test = new LCS(str1, str2);
         startTime = System.currentTimeMillis();
         System.out.println("result " + test.execute(16));
-        endTime   = System.currentTimeMillis();
+        endTime = System.currentTimeMillis();
         return endTime - startTime;
     }
 }
