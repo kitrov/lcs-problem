@@ -2,10 +2,11 @@
  * Created by Vik on 4/23/2016.
  */
 public class LCS {
-    Integer[][] table; // storing lcs problem table
+    Integer[][] table, test; // storing lcs problem table
     String string1, string2; // two strings for lcs search
     int len1, len2, rowi; // lengths of two strings, row iter
     int max;
+    int[][] iter ;
     boolean filled = false; // true when table is filled
 
     public LCS(String str1, String str2) {
@@ -16,6 +17,11 @@ public class LCS {
         this.len2 = str2.length() + 1;
         this.rowi = 1;
         this.table = new Integer[len2][len1];
+        this.test = new Integer[len2][len1];
+        this.iter = new int[len2][2];
+//        for (int i = 1; i < len2/2+0.5; i++) {
+//            ,
+//        }
         // first row and column are 0s
         for (int i = 0; i < len1; i++) {
             table[0][i] = new Integer(0);

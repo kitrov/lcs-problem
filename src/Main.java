@@ -9,12 +9,7 @@ public class Main {
 
 //        LCS test1 = new LCS(str1, str2);\
         Test test = new Test(str1+str2+str1 + str2+str1+str2, str2+str1+str2 + str1+str2+str1);
-        System.out.println("(1)time: " + test.run(1));
-        System.out.println("(2)time: " + test.run(2));
-        System.out.println("(4)time: " + test.run(4));
-        System.out.println("(8)time: " + test.run(8));
-        System.out.println("(16)time: " + test.run(16));
-        System.out.println("(32)time: " + test.run(32));
+        System.out.println("("+args[0]+")time: " + test.run(Integer.parseInt(args[0])));
 //        System.out.println(test1.execute(1) + ": " + test1.solution_str());
 //        System.out.println(test1.table_toString());
     }
@@ -32,8 +27,11 @@ class Test {
     public long run(int threads) {
         LCS test = new LCS(str1, str2);
         startTime = System.currentTimeMillis();
-        System.out.println("result " + test.execute(16));
+        System.out.println("result " + test.execute(threads));
         endTime = System.currentTimeMillis();
-        return endTime - startTime;
+        long time = endTime - startTime;
+        System.gc();
+        System.runFinalization();
+        return time;
     }
 }
